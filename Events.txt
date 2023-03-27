@@ -1,0 +1,74 @@
+
+Event               Data
+game_reset
+game_setup          player_count
+game_update         player_count
+player_joined       player
+player_left         player
+start_game
+pause_game
+end_game            winning_player
+ball_movement                           ball_direction      ball_speed
+ball_captured       player
+ball_released       player
+brick_collision     player              brick               remaining_strength
+brick_destroyed     player              brick
+brick_restored      player              brick               remaining_strength
+lord_collision      player                                  remaining_strength
+lord_destroyed      player
+lord_score          player
+wall_collision      wall                wall_position
+pawn_movement       player              pawn_speed
+pawn_position       player              pawn_position
+pawn_collision      player
+pawn_sized          player              pawn_size
+
+Commands
+move_left           player              accelerator
+move_right          player              accelerator
+catch_ball          player
+release_ball        player
+start_game
+pause_game
+stop_game
+enter_game          player              name
+leave_game          player
+
+
+
+Values
+
+Event            7 bits
+game_reset          1
+setup_game          2
+setup_update        3
+game_started        4
+game_paused         5
+game_over           6
+ball_movement       7
+ball_captured       8
+ball_released       9
+brick_collision     10
+brick_destroyed     11
+brick_restored      12
+lord_collision      13
+lord_destroyed      14
+lord_score          15
+wall_collision      16
+pawn_movement       17
+pawn_position       18
+pawn_collision      19
+pawn_sized          20
+
+Data                Bits
+player              3 bits
+player_count        3 bits
+ball_direction      12 bits     Numerator / 360 * degree_scale (ex. scale = 4 == each number is worth .25 degree)
+ball_speed          12 bits
+brick               12 bits
+remaining_strength  4 bits
+wall                4 bits
+wall_position       12 bits
+pawn_position       12 bits
+pawn_speed          12 bits
+pawn_size           3 bits

@@ -1,10 +1,9 @@
 package warlords;
 
+import java.nio.ByteBuffer;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
 import javax.enterprise.context.ApplicationScoped;
-// import javax.websocket.EncodeException;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
@@ -12,9 +11,6 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
-// import java.io.IOException;
-
-// import static java.util.Objects.requireNonNull;
 
 @ServerEndpoint("/start-websocket/{name}")
 @ApplicationScoped
@@ -42,23 +38,24 @@ public class GamePlayServer {
     }
 
     @OnMessage
-    public void onMessage(String message, @PathParam("name") String name) {
-        System.out.println("onMessage> " + name + ": " + message);
-        if (message.equalsIgnoreCase("_ready_")) {
-            broadcast("User " + name + " joined");
-        } else {
-            broadcast(">> " + name + ": " + message);
-        }
+    public void onMessage(ByteBuffer bb) {
+        int msg = bb.getInt();
+        // System.out.println("Server onMessage> " + ": " + msg);
+        broadcast(msg);
     }
 
-    private void broadcast(String message) {
+    private void broadcast(int message) {
+        ByteBuffer bb = ByteBuffer.allocate(4);
+        bb.putInt(message);
         sessions.values().forEach(s -> {
-            System.out.println("Broadcast: " + message);
-            s.getAsyncRemote().sendObject(message, result ->  {
+            // System.out.println("Broadcast: " + message);
+            bb.rewind();
+            s.getAsyncRemote().sendBinary(bb, result ->  {
                 if (result.getException() != null) {
                     System.out.println("Unable to send message: " + result.getException());
                 }
             });
         });
     }
+
 }
